@@ -10,7 +10,10 @@ const OUTPUT_PATH = new URL("../data/reviews.json", import.meta.url);
 type Review = {
   name: string;
   url: string;
+  title: string | null;
   body: string | null;
+  rating: number;
+  likeCount: number;
 };
 
 type ReviewLink = {
@@ -82,6 +85,7 @@ async function main() {
 
     const detailPage = await browser.newPage({ locale: "ja-JP" });
     const result: Review[] = [];
+    let likeCountElementsFound = 0;
 
     for (const review of reviewLinks.values()) {
       const response = await detailPage.goto(review.detailUrl, {
@@ -96,18 +100,51 @@ async function main() {
       }
 
       const bodyElement = detailPage.locator(".rvw-item__rvw-comment").first();
+      const titleElement = detailPage.locator(".rvw-item__title").first();
+      const title =
+        (await titleElement.count()) > 0
+          ? (await titleElement.innerText()).replace(/\s+/g, " ").trim()
+          : null;
       const body =
         (await bodyElement.count()) > 0
           ? (await bodyElement.innerText()).replace(/\s+/g, " ").trim()
           : null;
+      const ratingText = await detailPage
+        .locator(".rvw-item__ratings--val")
+        .first()
+        .innerText();
+      const likeCountElement = detailPage
+        .locator(".rvw-item__vote-like .js-like-btn-count > span")
+        .first();
+      const hasLikeCountElement = (await likeCountElement.count()) > 0;
+      const likeCountText = hasLikeCountElement
+        ? await likeCountElement.innerText()
+        : "0";
+      const rating = Number(ratingText);
+      const likeCount = Number(likeCountText);
+
+      if (hasLikeCountElement) {
+        likeCountElementsFound += 1;
+      }
+
+      if (!Number.isFinite(rating) || !Number.isInteger(likeCount)) {
+        throw new Error(`点数またはいいね数が不正です: ${review.detailUrl}`);
+      }
 
       result.push({
         name: review.name,
         url: review.url,
+        title,
         body,
+        rating,
+        likeCount,
       });
 
       await detailPage.waitForTimeout(1_000);
+    }
+
+    if (likeCountElementsFound === 0) {
+      throw new Error("全件でいいね数が見つかりませんでした。DOM構造を確認してください。");
     }
 
     await writeFile(OUTPUT_PATH, `${JSON.stringify(result, null, 2)}\n`);
