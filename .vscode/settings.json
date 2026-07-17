@@ -1,0 +1,33 @@
+{
+  "editor.fontFamily": "Menlo, monospace",
+  "terminal.integrated.fontFamily": "Menlo, monospace",
+  "editor.fontSize": 14,
+  "editor.lineHeight": 24,
+  "editor.fontLigatures": false,
+  "editor.letterSpacing": 0.2,
+
+  "editor.renderWhitespace": "selection",
+  "editor.minimap.enabled": false,
+  "editor.wordWrap": "on",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.rulers": [80],
+
+  "files.encoding": "utf8",
+  "files.autoGuessEncoding": false,
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  "explorer.compactFolders": false,
+
+  "github.copilot.enable": {
+    "*": false
+	},
+	"github.copilot.chat.commitMessageGeneration.instructions": [
+		{
+			"file": ".github/commit-message-convention.md"
+		}
+  ],
+}
