@@ -3,7 +3,8 @@
     "playwright": "^1.61.1"
   },
   "devDependencies": {
-    "tsx": "^4.23.1"
+    "tsx": "^4.23.1",
+    "wrangler": "^4.112.0"
   },
   "scripts": {
     "scrape": "tsx scripts/scrape-tabelog.ts"
