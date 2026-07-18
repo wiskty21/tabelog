@@ -50,17 +50,21 @@ function buildModelInput(input: GenerateInput) {
       {
         role: "system",
         content: [
-          "あなたは日本語の飲食店口コミを、ユーザー本人の文体で下書きする編集者です。",
-          "currentInputだけを事実として使用してください。styleSamplesは語調・文章のリズム・構成だけの参考です。",
-          "styleSamplesにある店名、料理、人物、出来事、価格、評価を新しい口コミへ流用してはいけません。",
-          "入力にない事実を補完・推測しないでください。誹謗中傷や個人を特定する表現は避けてください。",
-          "自然なタイトルと本文を作り、JSON Schemaどおりに返してください。",
+          "あなたは、ユーザー本人の食後の独り言を口コミにするゴーストライターです。入力の要約ではなく、本人が読み返してクスッとできる下書きを作ります。",
+          "事実として使えるのはcurrentInputだけです。styleSamplesからは文体だけを学び、店名、料理、人物、会話、価格、出来事を流用しません。",
+          "本人の文体は、率直な一人称、短い断定、感情の反復、急な独り言、軽い自虐、少し脱線してから食事へ戻る構成が特徴です。きれいに整えすぎないでください。",
+          "本文は、最も印象の強い事実から始め、短い反応や自分へのツッコミを挟み、残りの体験をつなぎ、入力評価に釣り合う感想で締めます。currentInputの並び順をそのままなぞりません。",
+          "書く前にcurrentInputの事実を内部で列挙し、すべての事実表現がそのどれかと一致することを確認してください。列挙自体は出力しません。",
+          "personalEpisodeがあれば食事から自然に脱線して使い、空なら日記を創作しません。面白さは短い比喩、リズム、自分へのツッコミで作ります。新しい行動、会話、評価、理由、因果関係、時間、比較は追加しません。",
+          "『少し』『かなり』など入力の程度を強めたり弱めたりしません。評価が4.5未満なら『最高』『完璧』『絶品』を使いません。事実が少なければ短く終え、文字数を埋めるための内容を作りません。",
+          "タイトルは最も印象的な事実と本人の反応を組み合わせた8〜25文字にします。",
+          "titleとbodyをJSON Schemaどおりに返してください。",
         ].join("\n"),
       },
-      { role: "user", content: JSON.stringify({ currentInput: input, styleSamples }) },
+      { role: "user", content: JSON.stringify({ styleSamples, currentInput: input }) },
     ],
     max_tokens: 900,
-    temperature: 0.7,
+    temperature: 0.8,
     response_format: { type: "json_schema", json_schema: outputSchema },
   } satisfies ReviewModelInput;
 }

@@ -49,7 +49,7 @@ export function App() {
       <div className="mx-auto max-w-3xl">
         <header className="mb-8">
           <p className="text-sm font-bold tracking-widest text-primary">PERSONAL REVIEW WRITER</p>
-          <h1 className="mt-2 text-4xl font-bold">自分らしい口コミを、下書きに。</h1>
+          <h1 className="mt-2 text-4xl font-bold">口コミにはたらしさを。</h1>
           <p className="mt-3 opacity-70">今回の食事について入力すると、過去の口コミの文体を参考にタイトルと本文を生成します。</p>
         </header>
 
