@@ -157,7 +157,7 @@ tabelog:{sourceReviewUrl}
 | `created_at` | TEXT | ISO 8601 |
 | `updated_at` | TEXT | ISO 8601 |
 
-`platform` と `source_type` にインデックスを作成する。
+参考文を投稿先で絞り込むため、`platform`にインデックスを作成する。
 
 #### `style_profiles`
 
