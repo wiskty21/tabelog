@@ -7,6 +7,9 @@
     "wrangler": "^4.112.0"
   },
   "scripts": {
+    "dev": "wrangler dev",
+    "types": "wrangler types --strict-vars false",
+    "types:check": "wrangler types --strict-vars false --check",
     "scrape": "tsx scripts/scrape-tabelog.ts"
   }
 }

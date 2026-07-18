@@ -82,6 +82,41 @@ npm run scrape
 
 出力先：[`data/reviews.json`](data/reviews.json)
 
+## 口コミ生成アプリのローカル起動
+
+ローカルではWorkers AI REST API、本番ではWorkers AI Bindingを使用します。失敗時に別経路へ自動で切り替えることはありません。
+
+### 1. Workers AI API Tokenを作成
+
+1. Cloudflareダッシュボードで「Workers AI」を開く
+2. 「Use REST API」を選ぶ
+3. 「Create a Workers AI API Token」を選ぶ
+4. 作成されたトークンをコピーする
+
+独自にトークンを作る場合は、`Workers AI - Read` と `Workers AI - Edit` の権限が必要です。
+
+### 2. ローカル設定
+
+`.dev.vars` の `CLOUDFLARE_AI_API_TOKEN` に、コピーしたトークンを設定します。このファイルはGitの追跡対象外です。
+
+```text
+AI_TRANSPORT="rest"
+CLOUDFLARE_ACCOUNT_ID="52ae66e464b0ab9acb6cb0ff72768ff8"
+CLOUDFLARE_AI_API_TOKEN="ここにトークンを貼る"
+```
+
+設定例は [`.dev.vars.example`](.dev.vars.example) にあります。
+
+### 3. 起動
+
+```bash
+npm run dev
+```
+
+表示されたローカルURLを開き、口コミ入力フォームから生成します。Workers AIはローカル実行でもCloudflare上で推論され、利用量に加算されます。
+
+本番は `wrangler.jsonc` の `AI_TRANSPORT="binding"` を使用するため、API Tokenをデプロイする必要はありません。
+
 ## 入出力のルール
 
 ### 入力
