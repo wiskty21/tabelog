@@ -58,7 +58,7 @@ export function App() {
             <h2 id="form-title" className="sr-only">口コミ入力フォーム</h2>
             <Field label="店名"><input className="input w-full" name="restaurantName" required maxLength={100} autoComplete="organization" placeholder="例：〇〇食堂" /></Field>
             <Field label="注文内容・体験"><textarea className="textarea h-32 w-full" name="experience" required maxLength={3000} placeholder="食べた料理、味、価格、店内の様子など、事実を自由に入力" /></Field>
-            <Field label="評価"><input className="input w-full" name="rating" type="number" required min={0} max={5} step={0.5} inputMode="decimal" placeholder="4.0" /></Field>
+            <Field label="評価"><input className="input w-full" name="rating" type="number" required min={0} max={5} step={0.1} inputMode="decimal" placeholder="4.0" /></Field>
             <Field label="日記・個人的エピソード" optional><textarea className="textarea h-32 w-full" name="personalEpisode" maxLength={2000} placeholder="誰と行ったか、その日にあったことなど" /></Field>
             <button className="btn btn-primary" type="submit" disabled={isLoading}>{isLoading ? "生成中…" : "口コミを生成する"}</button>
             <p className={`min-h-6 text-sm ${status.isError ? "text-error" : "opacity-60"}`} role="status" aria-live="polite">{status.message}</p>
