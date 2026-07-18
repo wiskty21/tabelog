@@ -8,14 +8,8 @@ type GenerateInput = {
   personalEpisode: string;
 };
 
-const sampleNames = new Set([
-  "フォーティントーキョー 新宿店",
-  "バニラビーンズ",
-  "ラーメン豚山 武蔵小杉店",
-]);
-
 const styleSamples = reviews
-  .filter((review): review is typeof review & { body: string } => sampleNames.has(review.name) && review.body !== null)
+  .filter((review): review is typeof review & { body: string } => review.body !== null)
   .map(({ title, body }) => ({ title, body }));
 
 const outputSchema = {
