@@ -4,12 +4,14 @@
   },
   "devDependencies": {
     "tsx": "^4.23.1",
+    "typescript": "^5.9.3",
     "wrangler": "^4.112.0"
   },
   "scripts": {
     "dev": "wrangler dev",
     "types": "wrangler types --strict-vars false",
     "types:check": "wrangler types --strict-vars false --check",
+    "typecheck": "tsc --noEmit",
     "scrape": "tsx scripts/scrape-tabelog.ts"
   }
 }

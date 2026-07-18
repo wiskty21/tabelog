@@ -63,5 +63,7 @@ export async function runReviewModel(env: Env, input: ReviewModelInput) {
   }
 
   const result = await env.AI.run(MODEL, input);
-  return result.response;
+  if (typeof result === "string") return result;
+  if ("response" in result) return result.response;
+  throw new Error("Workers AI Bindingの応答形式が正しくありません。");
 }
