@@ -2,37 +2,16 @@ const MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 
 export type ReviewModelInput = Ai_Cf_Meta_Llama_3_3_70B_Instruct_Fp8_Fast_Messages;
 
-type RestApiResult = {
-  response: unknown;
-};
-
-function readTransport(env: CloudflareBindings) {
-  const transport: string = env.AI_TRANSPORT;
-  if (transport !== "rest" && transport !== "binding") {
+export async function runReviewModel(env: CloudflareBindings, input: ReviewModelInput) {
+  if (env.AI_TRANSPORT === "binding") {
+    const result = await env.AI.run(MODEL, input);
+    if (typeof result === "string") return result;
+    if ("response" in result) return result.response;
+    throw new Error("Workers AI Bindingの応答形式が正しくありません。");
+  }
+  if (env.AI_TRANSPORT !== "rest") {
     throw new Error("AI_TRANSPORTはrestまたはbindingを指定してください。");
   }
-  return transport;
-}
-
-function parseRestApiResult(value: unknown): RestApiResult {
-  if (typeof value !== "object" || value === null) {
-    throw new Error("Workers AI REST APIの応答形式が正しくありません。");
-  }
-
-  const envelope = value as Record<string, unknown>;
-  if (envelope.success !== true || typeof envelope.result !== "object" || envelope.result === null) {
-    throw new Error("Workers AI REST APIが生成に失敗しました。");
-  }
-
-  const result = envelope.result as Record<string, unknown>;
-  if (!("response" in result)) {
-    throw new Error("Workers AI REST APIの応答にresponseがありません。");
-  }
-
-  return { response: result.response };
-}
-
-async function runWithRestApi(env: CloudflareBindings, input: ReviewModelInput) {
   if (!env.CLOUDFLARE_ACCOUNT_ID || !env.CLOUDFLARE_AI_API_TOKEN) {
     throw new Error(".dev.varsにCloudflareのAccount IDとWorkers AI API Tokenを設定してください。");
   }
@@ -49,21 +28,12 @@ async function runWithRestApi(env: CloudflareBindings, input: ReviewModelInput) 
     },
   );
 
-  const payload: unknown = await response.json();
+  const payload = await response.json() as { success?: boolean; result?: { response?: unknown } };
   if (!response.ok) {
     throw new Error(`Workers AI REST APIへの接続に失敗しました（HTTP ${response.status}）。`);
   }
-
-  return parseRestApiResult(payload).response;
-}
-
-export async function runReviewModel(env: CloudflareBindings, input: ReviewModelInput) {
-  if (readTransport(env) === "rest") {
-    return await runWithRestApi(env, input);
+  if (!payload.success || payload.result?.response === undefined) {
+    throw new Error("Workers AI REST APIの応答形式が正しくありません。");
   }
-
-  const result = await env.AI.run(MODEL, input);
-  if (typeof result === "string") return result;
-  if ("response" in result) return result.response;
-  throw new Error("Workers AI Bindingの応答形式が正しくありません。");
+  return payload.result.response;
 }

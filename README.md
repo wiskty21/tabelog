@@ -84,7 +84,7 @@ npm run scrape
 
 ## 口コミ生成アプリのローカル起動
 
-画面はReact + Vite、APIはHono、実行基盤はCloudflare Workersで構成しています。
+画面はReact + Vite + Tailwind CSS + daisyUI、APIはHono、実行基盤はCloudflare Workersで構成しています。
 
 ローカルではWorkers AI REST API、本番ではWorkers AI Bindingを使用します。失敗時に別経路へ自動で切り替えることはありません。
 
