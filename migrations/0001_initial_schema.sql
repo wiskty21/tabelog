@@ -1,6 +1,6 @@
 -- Migration number: 0001 	 2026-07-18T05:09:12.582Z
 CREATE TABLE writing_samples (
-  id TEXT PRIMARY KEY,
+  id TEXT PRIMARY KEY NOT NULL,
   platform TEXT NOT NULL,
   source_type TEXT NOT NULL
     CHECK (source_type IN ('imported', 'approved')),
@@ -19,11 +19,8 @@ CREATE TABLE writing_samples (
 CREATE INDEX idx_writing_samples_platform
   ON writing_samples (platform);
 
-CREATE INDEX idx_writing_samples_source_type
-  ON writing_samples (source_type);
-
 CREATE TABLE style_profiles (
-  platform TEXT PRIMARY KEY,
+  platform TEXT PRIMARY KEY NOT NULL,
   profile TEXT NOT NULL,
   sample_count INTEGER NOT NULL
     CHECK (sample_count >= 0),
@@ -31,7 +28,7 @@ CREATE TABLE style_profiles (
 );
 
 CREATE TABLE drafts (
-  id TEXT PRIMARY KEY,
+  id TEXT PRIMARY KEY NOT NULL,
   platform TEXT NOT NULL,
   input_json TEXT NOT NULL
     CHECK (json_valid(input_json)),
@@ -49,9 +46,3 @@ CREATE TABLE drafts (
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
-
-CREATE INDEX idx_drafts_status
-  ON drafts (status);
-
-CREATE INDEX idx_drafts_platform
-  ON drafts (platform);
