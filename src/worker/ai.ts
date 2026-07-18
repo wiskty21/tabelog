@@ -6,7 +6,7 @@ type RestApiResult = {
   response: unknown;
 };
 
-function readTransport(env: Env) {
+function readTransport(env: CloudflareBindings) {
   const transport: string = env.AI_TRANSPORT;
   if (transport !== "rest" && transport !== "binding") {
     throw new Error("AI_TRANSPORTはrestまたはbindingを指定してください。");
@@ -32,7 +32,7 @@ function parseRestApiResult(value: unknown): RestApiResult {
   return { response: result.response };
 }
 
-async function runWithRestApi(env: Env, input: ReviewModelInput) {
+async function runWithRestApi(env: CloudflareBindings, input: ReviewModelInput) {
   if (!env.CLOUDFLARE_ACCOUNT_ID || !env.CLOUDFLARE_AI_API_TOKEN) {
     throw new Error(".dev.varsにCloudflareのAccount IDとWorkers AI API Tokenを設定してください。");
   }
@@ -57,7 +57,7 @@ async function runWithRestApi(env: Env, input: ReviewModelInput) {
   return parseRestApiResult(payload).response;
 }
 
-export async function runReviewModel(env: Env, input: ReviewModelInput) {
+export async function runReviewModel(env: CloudflareBindings, input: ReviewModelInput) {
   if (readTransport(env) === "rest") {
     return await runWithRestApi(env, input);
   }
