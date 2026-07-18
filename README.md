@@ -84,6 +84,8 @@ npm run scrape
 
 ## 口コミ生成アプリのローカル起動
 
+画面はReact + Vite + Tailwind CSS + daisyUI、APIはHono、実行基盤はCloudflare Workersで構成しています。
+
 ローカルではWorkers AI REST API、本番ではWorkers AI Bindingを使用します。失敗時に別経路へ自動で切り替えることはありません。
 
 ### 1. Workers AI API Tokenを作成
@@ -117,6 +119,15 @@ npm run dev
 
 本番は `wrangler.jsonc` の `AI_TRANSPORT="binding"` を使用するため、API Tokenをデプロイする必要はありません。
 
+### 4. ビルドとデプロイ
+
+```bash
+npm run build
+npm run deploy
+```
+
+`npm run build`はWrangler生成型、React、Vite設定、Workerを型チェックしてから本番成果物を作成します。`npm run deploy`はビルド成功後の成果物をCloudflare Workersへデプロイします。
+
 ## 入出力のルール
 
 ### 入力
@@ -148,8 +159,20 @@ npm run dev
 .
 ├── data/
 │   └── reviews.json          # 取得結果
+├── src/
+│   ├── react-app/            # Reactの入力・生成画面
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── styles.css
+│   └── worker/               # Hono APIとWorkers AI処理
+│       ├── index.ts
+│       ├── generate.ts
+│       └── ai.ts
 ├── scripts/
 │   └── scrape-tabelog.ts    # 取得処理
+├── index.html                # ViteのHTMLエントリ
+├── vite.config.ts            # Vite・Cloudflare連携設定
+├── wrangler.jsonc            # Worker・D1・AI設定
 ├── package.json             # npmスクリプトと依存関係
 └── README.md
 ```

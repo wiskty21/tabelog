@@ -1,4 +1,4 @@
-import reviews from "../data/reviews.json";
+import reviews from "../../data/reviews.json";
 import { runReviewModel, type ReviewModelInput } from "./ai";
 
 type GenerateInput = {
@@ -82,7 +82,7 @@ function parseGeneratedReview(value: unknown) {
   return { title: result.title.trim(), body: result.body.trim() };
 }
 
-export async function generateReview(request: Request, env: Env) {
+export async function generateReview(request: Request, env: CloudflareBindings) {
   let input: GenerateInput;
   try {
     input = parseInput(await request.json());
